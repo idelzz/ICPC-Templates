@@ -31,3 +31,6 @@ desktop.ini
 .obsidian/plugins/recent-files-obsidian/data.json
 .obsidian/workspace-mobile.json
 .trash/
+# macOS
+.DS_Store
+**/.DS_Store
