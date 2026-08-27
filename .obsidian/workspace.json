@@ -11,10 +11,14 @@
             "id": "20bcfe2bd32b7b3e",
             "type": "leaf",
             "state": {
-              "type": "graph",
-              "state": {},
-              "icon": "lucide-git-fork",
-              "title": "关系图谱"
+              "type": "markdown",
+              "state": {
+                "file": "idealize的ICPC板子和笔记/板子和笔记.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "板子和笔记"
             }
           }
         ]
@@ -95,6 +99,7 @@
             "state": {
               "type": "backlink",
               "state": {
+                "file": "idealize的ICPC板子和笔记/板子和笔记.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -113,6 +118,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
+                "file": "idealize的ICPC板子和笔记/板子和笔记.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
@@ -155,7 +161,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "未命名.base",
+                "file": "idealize的ICPC板子和笔记/板子和笔记.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -175,7 +181,7 @@
             }
           }
         ],
-        "currentTab": 5
+        "currentTab": 4
       }
     ],
     "direction": "horizontal",
@@ -193,7 +199,7 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "cc4f3110457f9fd9",
+  "active": "20bcfe2bd32b7b3e",
   "lastOpenFiles": [
     "未命名.base",
     "idealize的ICPC板子和笔记/板子和笔记.md",
