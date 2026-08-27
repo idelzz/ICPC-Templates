@@ -155,6 +155,7 @@
             "state": {
               "type": "outline",
               "state": {
+                "file": "未命名.base",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -192,7 +193,7 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "20bcfe2bd32b7b3e",
+  "active": "cc4f3110457f9fd9",
   "lastOpenFiles": [
     "未命名.base",
     "idealize的ICPC板子和笔记/板子和笔记.md",
