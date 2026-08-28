@@ -162,7 +162,7 @@
               "type": "outline",
               "state": {
                 "file": "idealize的ICPC板子和笔记/板子和笔记.md",
-                "followCursor": false,
+                "followCursor": true,
                 "showSearch": false,
                 "searchQuery": ""
               },
@@ -181,11 +181,11 @@
             }
           }
         ],
-        "currentTab": 5
+        "currentTab": 4
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 295.0625
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -199,7 +199,7 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "850c3acdf27faf7f",
+  "active": "8b891e80e65d5746",
   "lastOpenFiles": [
     "未命名.md",
     "idealize的ICPC板子和笔记/板子和笔记.md",
