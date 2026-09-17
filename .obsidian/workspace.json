@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "idealize的ICPC板子和笔记/板子和笔记.md",
+                "file": "idealize的ICPC板子和笔记/ICPC板子和笔记.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "板子和笔记"
+              "title": "ICPC板子和笔记"
             }
           }
         ]
@@ -161,7 +161,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "idealize的ICPC板子和笔记/板子和笔记.md",
+                "file": "idealize的ICPC板子和笔记/ICPC板子和笔记.md",
                 "followCursor": true,
                 "showSearch": false,
                 "searchQuery": ""
@@ -201,8 +201,9 @@
   },
   "active": "850c3acdf27faf7f",
   "lastOpenFiles": [
+    "图片.png",
     "未命名.md",
-    "idealize的ICPC板子和笔记/板子和笔记.md",
+    "idealize的ICPC板子和笔记/ICPC板子和笔记.md",
     "未命名.base",
     "idealize的ICPC板子和笔记/img/3.png",
     "idealize的ICPC板子和笔记/img/2.png",

@@ -1,3 +1,5 @@
+2026.9.11更新 -idealize
+![[图片.png|192]]
 
 # 基础算法
 ## 快读
@@ -1331,6 +1333,21 @@ void build(vector<ll> &a, ll k) {
 }
 ```
 # 图论
+## 拓扑排序
+```cpp
+bool kahn(vector<vector<ll> > &tr, vector<ll> &tp, vector<ll> &d) {  
+    queue<ll> q;  
+    for (ll i = 1; i < d.size(); i++) if (d[i]==0)q.push(i);  
+    while (!q.empty()) {  
+        ll u = q.front();q.pop();  
+        tp.push_back(u);  
+        for (ll i = 0;i < tr[u].size();i++) {  
+            if (--d[tr[u][i]]==0)q.push(tr[u][i]);  
+        }  
+    }  
+    return tp.size()==tr.size();  
+}
+```
 ## 最短路
 ### Dijkstra算法+堆优化
 $O(n+m)$
