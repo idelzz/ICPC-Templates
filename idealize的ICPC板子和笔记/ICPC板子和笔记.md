@@ -1537,3 +1537,62 @@ ll lca(ll x, ll y) {
     return fa[x][0];  
 }
 ```
+## 强连通分量-Tarjan算法 
+
+**Tarjan 中 SCC 编号越小，在缩点 DAG 的拓扑序中越靠后（越靠近汇）**
+```cpp
+void tarjan(ll u) {  
+    dfn[u]=low[u]=++idx;  
+    st.push(u),instk[u]=true;  
+    for (ll v : e[u]) {  
+        if (!dfn[v]) {  
+            tarjan(v);  
+            low[u]=min(low[u],low[v]);  
+        }else if (instk[v]) {  
+            low[u]=min(low[u],dfn[v]);  
+        }  
+    }  
+    if (dfn[u]==low[u]) {  
+        ll tt;cnt++;  
+        do {  
+            tt=st.top();st.pop();  
+            instk[tt]=false;  
+            scc[tt]=cnt;  
+            ++siz[cnt];  
+        }while(tt!=u);  
+    }  
+}
+```
+## 2-SAT思想
+$O(n+m)$
+应用：2-SAT 算法用于判定并构造一组布尔赋值，使所有“至多涉及两个变量的逻辑约束”（如“若 A 则 B”“A、B 至少一真”“A、B 不能同真”）同时成立。
+
+拆点：变量 $x_i$ 对应两个节点  
+$$
+i \text{ 表示 } x_i=\text{true},\qquad i+n \text{ 表示 } x_i=\text{false}
+$$
+取反：
+$$
+\neg u = (u+n) \bmod 2n
+$$
+
+子句 $a \lor b$ 转化为两条蕴含边：
+$$
+\neg a \rightarrow b,\qquad \neg b \rightarrow a
+$$
+
+建图后跑 Tarjan 求强连通分量（SCC）。
+
+无解判定：
+$$
+\exists i,\ \text{scc}[i] = \text{scc}[i+n] \Rightarrow \text{无解}
+$$
+
+有解赋值（Tarjan 的 SCC 编号为逆拓扑序，选编号较小的文字为真）：
+$$
+x_i = 
+\begin{cases}
+\text{true}, & \text{scc}[i] < \text{scc}[i+n] \\
+\text{false}, & \text{scc}[i] > \text{scc}[i+n]
+\end{cases}
+$$
