@@ -1,4 +1,4 @@
-2026.9.11更新 -idealize
+来自 idelz@qq.com
 ![[图片.png|192]]
 
 # 基础算法
@@ -150,6 +150,7 @@ int main() {
 ```
 
 ## 分解质因数
+$𝑂(\sqrt 𝑁)$![](data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7 "O(\sqrt N)")
 ```cpp
 vector<int> breakdown(int N) {  
     vector<int> result;  
@@ -201,6 +202,90 @@ ll ppow(ll a, ll n, ll m) {
 ```
 
 ## 组合数
+### 定义
+
+对非负整数 $n,k$：
+
+$$
+\binom{n}{k}=
+\begin{cases}
+\dfrac{n!}{k!(n-k)!}, & 0\le k\le n,\\[4pt]
+0, & k<0\ \text{或}\ k>n.
+\end{cases}
+$$
+### 帕斯卡递推
+
+$$
+\binom{n}{k}=\binom{n-1}{k}+\binom{n-1}{k-1}.
+$$
+
+### 乘积恒等式
+
+$$
+\binom{n}{k}\binom{k}{m}
+=
+\binom{n}{m}\binom{n-m}{k-m}.
+$$
+
+
+### 二项式定理
+
+$$
+(x+y)^n=\sum_{k=0}^{n}\binom{n}{k}x^k y^{n-k}.
+$$
+
+令 $x=y=1$：
+
+$$
+\sum_{k=0}^{n}\binom{n}{k}=2^n.
+$$
+
+所以：
+
+$$
+\sum_{k=1}^{n}\binom{n}{k}=2^n-1.
+$$
+
+令 $x=1,\ y=-1$：
+
+$$
+\sum_{k=0}^{n}(-1)^k\binom{n}{k}=0,\qquad n\ge 1.
+$$
+
+带权求和：
+
+$$
+\sum_{k=0}^{n}k\binom{n}{k}=n2^{n-1}.
+$$
+
+$$
+\sum_{k=0}^{n}k^2\binom{n}{k}=n(n+1)2^{n-2}.
+$$
+### 奇偶性
+
+$$
+\binom{n}{k}\ \text{为奇数}
+\iff
+k\ \text{的二进制位是}\ n\ \text{的子集}
+\iff
+(k\ \&\ (n-k))=0.
+$$
+
+---
+
+### 常用技巧
+
+1. 看到 $\sum \binom{n}{k}$，先想 $2^n$。
+2. 看到 $k\binom{n}{k}$，用 $k\binom{n}{k}=n\binom{n-1}{k-1}$。
+3. 看到 $\sum \binom{n}{k}^2$，用 $\binom{2n}{n}$。
+4. 看到 $\sum_{i=r}^n \binom{i}{r}$，用 $\binom{n+1}{r+1}$。
+5. 取模计算优先预处理阶乘逆元；$n$ 大 $p$ 小用 Lucas。
+6. 判断奇偶性用二进制子集条件。
+7. 二项式定理是大多数组合数求和的根源。
+
+---
+
+之后我都用 `$...$` 和 `$$...$$` 这种 Obsidian 兼容格式。
 ```cpp
 const ll P = 1e9 + 7, N = 2e5;  
 ll mul[N + 1], inv[N + 1];  
@@ -1596,3 +1681,25 @@ x_i =
 \text{false}, & \text{scc}[i] > \text{scc}[i+n]
 \end{cases}
 $$
+
+
+# 字符串
+## 前缀函数
+
+```cpp
+vector<int> prefix_function(string s) {
+  int n = (int)s.length();
+  vector<int> pi(n);
+  for (int i = 1; i < n; i++)
+    for (int j = i; j >= 0; j--)
+      if (s.substr(0, j) == s.substr(i - j + 1, j)) {
+        pi[i] = j;
+        break;
+      }
+  return pi;
+}
+```
+
+## KMP算法
+我们构造一个字符串 𝑠 +# +𝑡![](data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7 "s + \# + t")，其中 #![](data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7 "\#") 为一个既不出现在 𝑠![](data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7 "s") 中也不出现在 𝑡![](data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7 "t") 中的分隔符．接下来计算该字符串的前缀函数．现在考虑该前缀函数除去最开始 𝑛 +1![](data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7 "n + 1") 个值（即属于字符串 𝑠![](data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7 "s") 和分隔符的函数值）后其余函数值的意义．根据定义，𝜋[𝑖]![](data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7 "\pi[i]") 为右端点在 𝑖![](data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7 "i") 且同时为一个前缀的最长真子串的长度，具体到我们的这种情况下，其值为与 𝑠![](data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7 "s") 的前缀相同且右端点位于 𝑖![](data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7 "i") 的最长子串的长度．由于分隔符的存在，该长度不可能超过 𝑛![](data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7 "n")．而如果等式 𝜋[𝑖] =𝑛![](data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7 "\pi[i] = n") 成立，则意味着 𝑠![](data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7 "s") 完整出现在该位置（即其右端点位于位置 𝑖![](data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7 "i")）．
+如果有环，考虑复制一份主串在后面
