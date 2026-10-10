@@ -164,9 +164,7 @@ vector<int> breakdown(int N) {
     return result;  
 }
 ```
-## 裴属定理
-**定义**
-- 设 $a,b$ 是不全为零的整数．那么，对于任意整数 $x,y$，都有 $\gcd(a,b) \mid ax+by$ 成立；而且，存在整数 $x,y$，使得 $ax+by=\gcd(a,b)$ 成立．
+
 ## 扩展欧几里得
 
 ![[1.png]]
@@ -283,9 +281,6 @@ $$
 6. 判断奇偶性用二进制子集条件。
 7. 二项式定理是大多数组合数求和的根源。
 
----
-
-之后我都用 `$...$` 和 `$$...$$` 这种 Obsidian 兼容格式。
 ```cpp
 const ll P = 1e9 + 7, N = 2e5;  
 ll mul[N + 1], inv[N + 1];  
@@ -447,6 +442,9 @@ void pre(int n) {
     }
 }
 ```
+## 裴属定理
+**定义**
+- 设 $a,b$ 是不全为零的整数．那么，对于任意整数 $x,y$，都有 $\gcd(a,b) \mid ax+by$ 成立；而且，存在整数 $x,y$，使得 $ax+by=\gcd(a,b)$ 成立．
 ## 中国剩余定理
 **问题形式**
 求解如下同余方程组（$n$ 个方程）：
@@ -458,7 +456,8 @@ x \equiv a_2 \pmod{m_2} \\
 x \equiv a_n \pmod{m_n}
 \end{cases}
 $$
-其中**模数 $m_1, m_2, \dots, m_n$ 不一定两两互质**，要求输出最小非负解 $x$，或者判断无解。
+要求输出最小非负解 $x$，或者判断无解。
+
 **CRT**
   - 条件：模数 $m_1,\dots,m_k$ 两两互质  
   - 令 $M = \prod m_i$  
@@ -489,6 +488,7 @@ ll crt(const vector<ll>& a, const vector<ll>& m) {
 ```
 
 **EXCRT**
+若其中**模数 $m_1, m_2, \dots, m_n$ 不一定两两互质**，
 ![[3.png]]
 ```cpp
 LL exgcd(LL a, LL b, LL &x, LL &y) {  
@@ -1687,19 +1687,144 @@ $$
 ## 前缀函数
 
 ```cpp
-vector<int> prefix_function(string s) {
-  int n = (int)s.length();
-  vector<int> pi(n);
-  for (int i = 1; i < n; i++)
-    for (int j = i; j >= 0; j--)
-      if (s.substr(0, j) == s.substr(i - j + 1, j)) {
-        pi[i] = j;
-        break;
-      }
-  return pi;
+vector<ll> pref(const string& s) {  
+    ll n = s.length();  
+    vector<ll> pi(n);  
+    for (ll i = 1; i < n; i++) {  
+        ll j = pi[i - 1];  
+        while (j > 0 && s[i] != s[j]) j = pi[j - 1];  
+        if (s[i] == s[j]) j++;  
+        pi[i] = j;  
+    }  
+    return pi;  
 }
 ```
 
 ## KMP算法
 我们构造一个字符串 𝑠 +# +𝑡![](data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7 "s + \# + t")，其中 #![](data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7 "\#") 为一个既不出现在 𝑠![](data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7 "s") 中也不出现在 𝑡![](data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7 "t") 中的分隔符．接下来计算该字符串的前缀函数．现在考虑该前缀函数除去最开始 𝑛 +1![](data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7 "n + 1") 个值（即属于字符串 𝑠![](data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7 "s") 和分隔符的函数值）后其余函数值的意义．根据定义，𝜋[𝑖]![](data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7 "\pi[i]") 为右端点在 𝑖![](data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7 "i") 且同时为一个前缀的最长真子串的长度，具体到我们的这种情况下，其值为与 𝑠![](data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7 "s") 的前缀相同且右端点位于 𝑖![](data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7 "i") 的最长子串的长度．由于分隔符的存在，该长度不可能超过 𝑛![](data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7 "n")．而如果等式 𝜋[𝑖] =𝑛![](data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7 "\pi[i] = n") 成立，则意味着 𝑠![](data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7 "s") 完整出现在该位置（即其右端点位于位置 𝑖![](data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7 "i")）．
 如果有环，考虑复制一份主串在后面
+
+# 动态规划
+
+## SOS DP
+
+### 算法概括
+
+给定长度为 $2^m$ 的数组 $f[mask]$，其中 $mask$ 是 $m$ 位二进制数。  
+求：
+
+$$
+g[mask] = \sum_{sub \subseteq mask} f[sub]
+$$
+
+即所有是 $mask$ 子集的 $sub$ 对应的 $f[sub]$ 之和。
+
+**核心思想**：按位从低到高处理，每次允许某一位从 $1$ 变成 $0$。  
+初始 $g = f$，对于每一位 $i$，若 $mask$ 的第 $i$ 位为 $1$，则：
+
+$$
+g[mask] += g[mask \oplus (1 \ll i)]
+$$
+
+处理完所有位后，$g[mask]$ 即为所有子集之和。
+
+**复杂度**：$O(m \cdot 2^m)$，空间 $O(2^m)$。
+### 模板：子集和
+
+```cpp
+// f[0..(1<<m)-1] 初始数组
+// 求 g[mask] = sum_{sub ⊆ mask} f[sub]
+vector<long long> g = f; // 复制一份
+for (int i = 0; i < m; ++i) {
+    int bit = 1 << i;
+    for (int mask = 0; mask < (1 << m); ++mask) {
+        if (mask & bit) {
+            g[mask] += g[mask ^ bit];
+        }
+    }
+}
+```
+
+块状循环优化版：
+
+```cpp
+vector<long long> g = f;
+for (int i = 0; i < m; ++i) {
+    int bit = 1 << i;
+    for (int mask = 0; mask < (1 << m); mask += bit << 1) {
+        for (int sub = 0; sub < bit; ++sub) {
+            g[mask + bit + sub] += g[mask + sub];
+        }
+    }
+}
+```
+
+### 模板：超集和
+
+求：
+
+$$
+g[mask] = \sum_{sup \supseteq mask} f[sup]
+$$
+
+```cpp
+vector<long long> g = f;
+for (int i = 0; i < m; ++i) {
+    int bit = 1 << i;
+    for (int mask = 0; mask < (1 << m); ++mask) {
+        if (!(mask & bit)) {
+            g[mask] += g[mask | bit];
+        }
+    }
+}
+```
+
+---
+
+## 状态压缩 DP
+
+### 算法概括
+
+用一个 $k$ 位二进制整数 $mask$ 表示“选了哪些元素”。  
+状态空间大小为 $2^k$，通常 $k \le 20$。
+
+**最常用模式**：  
+状态：$dp[mask]$ 表示选了集合 $mask$ 时的最优值。  
+转移：枚举一个未选元素 $i$，加入集合。
+
+$$
+dp[mask \mid (1 \ll i)] = \min(dp[mask \mid (1 \ll i)],\ dp[mask] + cost(mask, i))
+$$
+
+**复杂度**：$O(k \cdot 2^k)$。
+
+### 模板
+
+```cpp
+int full = (1 << k) - 1;
+const long long INF = (1LL << 62);
+vector<long long> dp(1 << k, INF);
+dp[0] = 0;
+
+for (int mask = 0; mask < full; ++mask) {
+    for (int i = 0; i < k; ++i) {
+        if (!(mask & (1 << i))) {
+            int nxt = mask | (1 << i);
+            dp[nxt] = min(dp[nxt], dp[mask] + cost(mask, i));
+        }
+    }
+}
+// 答案：dp[full]
+```
+
+### 常用位运算
+
+| 操作          | 代码                                              |
+| ----------- | ----------------------------------------------- |
+| 取最低位的 $1$   | `mask & -mask`                                  |
+| 最低位 $1$ 的位置 | `__builtin_ctz(mask)`                           |
+| 统计 $1$ 的个数  | `__builtin_popcount(mask)`                      |
+| 枚举所有子集      | `for (sub = mask; sub; sub = (sub - 1) & mask)` |
+| 去掉最低位的 $1$  | `mask &= mask - 1`                              |
+
+定义一个序列b = (b_1, b_2, . . . , b_m) 是好的，当且仅当对于每一个i = 2, 3, . . . , m，都有 2 · b)(i−1 )≤ b_i ≤ 3 · b_(i−1). 特别地，长度为1 的序列总是好的。 现在给定一个长度为n 的正整数序列a = (a1, a2, . . . , an)。你需要回答q 次询问，每次询问给出一个区 间[l, r]（1 ≤ l ≤ r ≤ n），请找出在子序列al , al+1, . . . , ar 中（保持原顺序），最长的好的子序列的长 度。 注意：子序列不一定是连续的，但必须保持原序列中的相对顺序。
