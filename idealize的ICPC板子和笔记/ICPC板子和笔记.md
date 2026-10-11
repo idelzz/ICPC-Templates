@@ -645,6 +645,71 @@ int main() {
 }
 ```
 
+## 矩阵快速幂
+```cpp
+#include<iostream>  
+#include <vector>  
+using namespace std;  
+using ll = long long;  
+//洛谷P1962  
+//idealize持续保持备战ICPC Created in 2026/10/11 19:20  
+const int MOD = 1e9 + 7;
+  
+struct matrix {  s
+    vector<vector<ll> > c;  
+    ll n,m;  
+    matrix(ll p, ll q) {  
+        c.assign(p + 1, vector<ll>(q + 1, 0));  
+        n = p, m = q;  
+    }  
+    ll nn() const { return n; }  
+    ll mm() const { return m; }  
+};  
+  
+matrix operator*(const matrix &a, const matrix &b){  
+    matrix c(a.nn(), b.mm());  
+    for (ll i = 1; i <= a.nn(); i++) {  
+        for (ll j = 1; j <= b.mm(); j++) {  
+            for (ll p = 1; p <= b.nn(); p++) {  
+                c.c[i][j] = (c.c[i][j] + a.c[i][p] * b.c[p][j]) % MOD;  
+            }  
+        }  
+    }  
+    return c;  
+}  
+  
+matrix ppow(matrix a, ll n) {  
+    matrix tmp(a.nn(), a.nn());  
+    for (ll i = 1; i <= a.nn(); i++) tmp.c[i][i]=1;  
+    while (n) {  
+        if (n & 1) tmp = tmp * a;  
+        a = a * a;  
+        n >>= 1;  
+    }  
+    return tmp;  
+}  
+  
+int main() {  
+    ios::sync_with_stdio(false);  
+    cin.tie(nullptr);  
+    cout.tie(nullptr);  
+    ll n;  
+    cin >> n;  
+    if (n == 1) {  
+        cout << 1 << '\n';  
+        return 0;  
+    }else if (n==2) {  
+        cout << 1 << '\n';  
+        return 0;  
+    }  
+    matrix a(1, 2),b(2,2);  
+    a.c[1][1] = 1,a.c[1][2] = 1;  
+    b.c[1][1]=1,b.c[1][2]=1,b.c[2][1]=1;  
+    matrix c = a*ppow(b,n-2);  
+    cout << c.c[1][1] << '\n';  
+    return 0;  
+}
+```
 # 数据结构
 
 ## 并查集
