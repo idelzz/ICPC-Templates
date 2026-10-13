@@ -1884,12 +1884,148 @@ for (int mask = 0; mask < full; ++mask) {
 
 ### 常用位运算
 
-| 操作          | 代码                                              |
-| ----------- | ----------------------------------------------- |
-| 取最低位的 $1$   | `mask & -mask`                                  |
-| 最低位 $1$ 的位置 | `__builtin_ctz(mask)`                           |
-| 统计 $1$ 的个数  | `__builtin_popcount(mask)`                      |
-| 枚举所有子集      | `for (sub = mask; sub; sub = (sub - 1) & mask)` |
-| 去掉最低位的 $1$  | `mask &= mask - 1`                              |
+| 操作          | 代码                                                     |
+| ----------- | ------------------------------------------------------ |
+| 取最低位的 $1$   | `mask & -mask`                                         |
+| 最低位 $1$ 的位置 | `__builtin_ctz(mask)`                                  |
+| 统计 $1$ 的个数  | `__builtin_popcount(mask)``__builtin_popcountll(mask)` |
+| 枚举所有子集      | `for (sub = mask; sub; sub = (sub - 1) & mask)`        |
+| 去掉最低位的 $1$  | `mask &= mask - 1`                                     |
 
-定义一个序列b = (b_1, b_2, . . . , b_m) 是好的，当且仅当对于每一个i = 2, 3, . . . , m，都有 2 · b)(i−1 )≤ b_i ≤ 3 · b_(i−1). 特别地，长度为1 的序列总是好的。 现在给定一个长度为n 的正整数序列a = (a1, a2, . . . , an)。你需要回答q 次询问，每次询问给出一个区 间[l, r]（1 ≤ l ≤ r ≤ n），请找出在子序列al , al+1, . . . , ar 中（保持原顺序），最长的好的子序列的长 度。 注意：子序列不一定是连续的，但必须保持原序列中的相对顺序。
+## 状压DP的矩阵加速
+**$O(S^3 \log e)$**
+
+> [!summary] 应用面
+> 当 DP 转移可写成 $dp_{t+1}[v] = \max_u (dp_t[u] + w[u][v])$，且步数 $e$ 很大、状态数 $S$ 较小时，用 max-plus 矩阵快速幂把 $O(eS^2)$ 优化到 $O(S^3 \log e)$
+> - 走恰好 $e$ 步，求最大收益 / 最长路。
+> - 每轮决策只依赖上一轮状态。
+> - 转移是“取最大值 + 相加”。
+> - 状态数小，轮数巨大。
+
+### 步骤
+
+1. 定状态：$0 \sim S-1$。
+2. 写一步收益：$w[u][v]$。
+3. 构造矩阵：
+
+$$
+M[u][v] = w[u][v]
+$$
+
+不可达为 $-\infty$。
+
+4. 初始向量：
+
+$$
+sta[0][v]
+$$
+
+5. 算答案：
+
+$$
+ans = \max \big(sta \otimes M^{e}\big)
+$$
+
+若第一轮已由 $sta$ 提供，则用 $M^{e-1}$。
+
+```cpp
+#include<iostream>  
+#include <vector>  
+using namespace std;  
+using ll = long long;  
+const ll INF = 1e18;  
+//2025西安B题  
+//idealize持续保持备战ICPC丨2026/10/12 13:50  
+struct matrix {  
+    vector<vector<ll> > c;  
+  
+    matrix(ll p, ll q, bool dw = false) {  
+        c.assign(p + 1, vector<ll>(q + 1, -INF));  
+        if (dw) {  
+            for (ll i = 0; i <= p; i++) c[i][i] = 0;  
+        }  
+    }  
+  
+    ll n() const { return c.size() - 1; }  
+    ll m() const { return c[0].size() - 1; }  
+};  
+  
+matrix operator*(const matrix &a, const matrix &b) {  
+    matrix c(a.n(), b.m());  
+    for (int i = 0; i <= a.n(); i++) {  
+        for (int k = 0; k <= a.m(); k++) {  
+            if (a.c[i][k] <= -INF / 2) continue;  
+            for (int j = 0; j <= b.m(); j++) {  
+                if (b.c[k][j] <= -INF / 2) continue;  
+                c.c[i][j] = max(c.c[i][j], a.c[i][k] + b.c[k][j]);  
+            }  
+        }  
+    }  
+    return c;  
+}  
+  
+matrix ppow(matrix a, ll n) {  
+    matrix res(a.n(), a.n(), true);  
+    while (n) {  
+        if (n & 1) res = res * a;  
+        a = a * a;  
+        n >>= 1;  
+    }  
+    return res;  
+}  
+  
+int main() {  
+    ios::sync_with_stdio(false);  
+    cin.tie(nullptr);  
+    cout.tie(nullptr);  
+    ll t;  
+    cin >> t;  
+    while (t--) {  
+        ll n, m, k, r;  
+        cin >> n >> m >> k >> r;  
+        vector<pair<ll, ll> > dmg(1 << n);  
+        vector<pair<ll, ll> > ac(n + 1);  
+        for (ll i = 1; i <= n; i++) {  
+            cin >> ac[i].first >> ac[i].second;  
+        }  
+        ll ful = (1 << n) - 1;  
+        for (ll msk = 0; msk <= ful; msk++) {  
+            ll cost = 0, sum = 0;  
+            for (ll i = 0; i < n; i++) {  
+                if (msk & (1 << i)) {  
+                    sum += ac[i+1].first;  
+                    cost += ac[i+1].second;  
+                }  
+            }  
+            if (cost > m) {  
+                dmg[msk].first = -INF;  
+                dmg[msk].second = cost;  
+            } else {  
+                dmg[msk].first = sum;  
+                dmg[msk].second = cost;  
+            }  
+        }  
+        matrix sta(ful, ful);  
+        for (ll u = 0; u <= ful; u++) {  
+            sta.c[0][u] = dmg[u].first;  
+        }  
+        matrix M(ful, ful);  
+        for (ll u = 0; u <= ful; u++) {  
+            for (ll v = 0; v <= ful; v++) {  
+                ll cost = 0;  
+                if (dmg[v].second + k*__builtin_popcountll(u & v) <= m)M.c[u][v] = dmg[v].first;  
+                else M.c[u][v] = -INF;  
+            }  
+        }  
+        matrix ans(ful, ful);  
+        ans = sta*ppow(M, r-1);  
+        ll res = 0;  
+        for (ll u = 0; u <= ful; u++) {  
+            for (ll v = 0; v <= ful; v++) {  
+                res = max(res, ans.c[u][v]);  
+            }  
+        }  
+        cout << res << '\n';  
+    }  
+}
+```
