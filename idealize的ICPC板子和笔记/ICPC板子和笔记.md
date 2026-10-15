@@ -867,6 +867,60 @@ int main() {
     return 0;
 }
 ```
+
+## 非递归线段树
+$有效减小线段树的常数，查询时左闭右开[l, r)，query(L, R+1)$
+```cpp
+struct SegTree {
+    int n;
+    vector<long long> seg;
+
+    SegTree(const vector<long long>& a) {
+        int m = a.size();
+        n = 1;
+        while (n < m) n <<= 1;
+
+        seg.assign(2 * n, 0);
+
+        for (int i = 0; i < m; i++) {
+            seg[n + i] = a[i];
+        }
+
+        for (int i = n - 1; i >= 1; i--) {
+            seg[i] = seg[2 * i] + seg[2 * i + 1];
+        }
+    }
+
+    void update(int p, long long val) {
+        p += n;
+        seg[p] = val;
+
+        for (p >>= 1; p; p >>= 1) {
+            seg[p] = seg[2 * p] + seg[2 * p + 1];
+        }
+    }
+
+    long long query(int l, int r) { // [l, r)
+        l += n;
+        r += n;
+
+        long long resL = 0, resR = 0;
+
+        while (l < r) {
+            if (l & 1) {
+                resL += seg[l++];
+            }
+            if (r & 1) {
+                resR = seg[--r] + resR;
+            }
+            l >>= 1;
+            r >>= 1;
+        }
+
+        return resL + resR;
+    }
+};
+```
 ## 可持久化线段树
 ```cpp
 #include <algorithm>
@@ -1892,6 +1946,7 @@ for (int mask = 0; mask < full; ++mask) {
 | 枚举所有子集      | `for (sub = mask; sub; sub = (sub - 1) & mask)`        |
 | 去掉最低位的 $1$  | `mask &= mask - 1`                                     |
 
+
 ## 状压DP的矩阵加速
 **$O(S^3 \log e)$**
 
@@ -1902,7 +1957,7 @@ for (int mask = 0; mask < full; ++mask) {
 > - 转移是“取最大值 + 相加”。
 > - 状态数小，轮数巨大。
 
-### 步骤
+### 算法概括
 
 1. 定状态：$0 \sim S-1$。
 2. 写一步收益：$w[u][v]$。

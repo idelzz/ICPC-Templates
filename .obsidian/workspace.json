@@ -83,8 +83,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "right": {
     "id": "9bb48d43374b8665",
@@ -182,7 +181,7 @@
             }
           }
         ],
-        "currentTab": 5
+        "currentTab": 4
       }
     ],
     "direction": "horizontal",
@@ -200,7 +199,7 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "850c3acdf27faf7f",
+  "active": "20bcfe2bd32b7b3e",
   "lastOpenFiles": [
     "图片.png",
     "未命名.md",
